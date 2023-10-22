@@ -1,3 +1,6 @@
+import itertools as it
+
+
 def main():
     print("Hello World!")
     
@@ -29,15 +32,24 @@ def addNewInitialVariable(productions):
 
                 
     print(transitiveNullProductions)"""  
-    
-def countLetter(text, letter):
-    count = 0
-    for char in text:
-        if char == letter:
-            count += 1
-    return count
-                
-    
+
+def combinationsRemoveLetter(text, letter):
+    n = text.count(letter)
+    result = set()
+
+    # Agregar la cadena sin la letra
+    result.add(text.replace(letter, ''))
+
+    # Generar combinaciones de quitar la letra
+    for i in range(1, n + 1):
+        for combo in it.combinations(range(n), i):
+            removed_text = text
+            for j in combo:
+                removed_text = removed_text[:removed_text.index(letter, j)] + removed_text[removed_text.index(letter, j) + 1:]
+            result.add(removed_text)
+
+    return result
+
 def removeNullProductions(productions):
     KeysNullProductions = []
     for key, value in productions.items():
@@ -49,13 +61,19 @@ def removeNullProductions(productions):
     for val in KeysNullProductions:
         for key, value in productions.items():
             for values in value:
-                count = countLetter(values, val)
-                for i in range(count):
+                count = values.count(val)
+                if count == 0:
+                    continue
+                else:
                     if len(values) == 1:
-                        productions[key].append("ε")
+                            productions[key].append("ε")
                     else:
-                        if values.replace(val, "", i + 1) not in productions[key]:
-                            productions[key].append(values.replace(val, "", i + 1))
+                        """comb = combinationsRemoveLetter(values, val)
+                        for i in comb:
+                            if i != "" and i not in productions[key]:
+                                productions[key].append(i)"""
+                        
+                    
     
     if KeysNullProductions != []:
         removeNullProductions(productions) 
@@ -89,7 +107,6 @@ if __name__ == '__main__':
     "A": ["B", "S"],
     "B": ["b", "ε"]
     }
-    
     
     productions = addNewInitialVariable(productions)
     productions = removeNullProductions(productions)
