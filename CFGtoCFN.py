@@ -20,35 +20,50 @@ def addNewInitialVariable(productions):
     new_productions.update(productions)
     
     return new_productions
+  
 
-"""def removeNullProductions(productions):
-    transitiveNullProductions = []
-    for key, value in productions.items():
-        for production in value:
-            if "ε" in production:
-                if key not in transitiveNullProductions:
-                    transitiveNullProductions.append(key)
-                
-
-                
-    print(transitiveNullProductions)"""  
-
-def combinationsRemoveLetter(text, letter):
-    n = text.count(letter)
-    result = set()
-
-    # Agregar la cadena sin la letra
-    result.add(text.replace(letter, ''))
-
-    # Generar combinaciones de quitar la letra
-    for i in range(1, n + 1):
-        for combo in it.combinations(range(n), i):
-            removed_text = text
-            for j in combo:
-                removed_text = removed_text[:removed_text.index(letter, j)] + removed_text[removed_text.index(letter, j) + 1:]
-            result.add(removed_text)
-
+def combinationsRemoveLetter(text, letter, index, result, originalText):
+    listText = list(text)
+    
+    temp = listText.copy()
+    if listText[index] == letter:
+        temp = listText.copy()
+        temp.pop(index)
+        if "".join(temp) not in result and "".join(temp) != "":
+            result.append("".join(temp))
+        index = 0
+    else:
+        index += 1
+    
+    if index >= len(temp):
+        index = 1
+        temp = originalText
+        reverseCombinationRemoveLetter(temp, letter, index, result)
+    else:
+        combinationsRemoveLetter("".join(temp), letter, index, result, originalText)
+    
     return result
+
+def reverseCombinationRemoveLetter(text, letter, index, result):
+    listText = list(text)
+    
+    temp = listText.copy()
+    if listText[-index] == letter:
+            temp = listText.copy()
+            temp.pop(-index)
+            if "".join(temp) not in result and "".join(temp) != "":
+                result.append("".join(temp))
+            index = 1
+    else:
+        index += 1
+    text = "".join(temp)
+    if index >= len(text):
+        return result
+    else:
+        reverseCombinationRemoveLetter(text, letter, index, result)
+    
+    
+            
 
 def removeNullProductions(productions):
     KeysNullProductions = []
@@ -68,10 +83,10 @@ def removeNullProductions(productions):
                     if len(values) == 1:
                             productions[key].append("ε")
                     else:
-                        """comb = combinationsRemoveLetter(values, val)
+                        comb = combinationsRemoveLetter(values, val, 0, [], values)
                         for i in comb:
-                            if i != "" and i not in productions[key]:
-                                productions[key].append(i)"""
+                            if i not in productions[key]:
+                                productions[key].append(i)
                         
                     
     
@@ -108,8 +123,9 @@ if __name__ == '__main__':
     "B": ["b", "ε"]
     }
     
-    productions = addNewInitialVariable(productions)
-    productions = removeNullProductions(productions)
+    print(combinationsRemoveLetter("AAA", "A", 0, [], "AAA"))
+    #productions = addNewInitialVariable(productions)
+    #productions = removeNullProductions(productions)
     print(productions)
     
     #main()
