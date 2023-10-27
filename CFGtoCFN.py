@@ -193,6 +193,18 @@ if __name__ == '__main__':
     "A": ["B", "S"],
     "B": ["b", "ε"]
     }
+
+    productions = {
+        "S": ["NP VP"],
+        "VP": ["VP PP", "cooks", "drinks", "eats", "cuts"],
+        "PP": ["P NP"],
+        "NP": ["Det N", "he", "she"],
+        "V": ["cooks", "drinks", "eats", "cuts"],
+        "P": ["in", "with"],
+        "N": ["cat", "dog", "beer", "cake", "juice", "meat", "soup", "fork", "knife", "oven", "spoon"],
+        "Det": ["a", "the"]
+    }
+
     
     productions = addNewInitialVariable(productions)
     productions = removeNullProductions(productions)
