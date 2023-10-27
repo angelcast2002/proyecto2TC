@@ -128,7 +128,6 @@ def find_unique_uppercase_key(productions):
         if letter not in keys:
             return letter
         
-
 def findMoreThanTwoVariables(productions):
     new_productions = productions.copy()  # Copia del diccionario original para evitar modificarlo directamente
     for key, values in new_productions.items():
@@ -170,6 +169,40 @@ def renameMoreThaTwoVariables(productions, moreThanTwo):
         new_productions[key] = [value]
     return findMoreThanTwoVariables(new_productions)  # Devuelve el diccionario modificado
 
+def findNonTerminalWithTerminal(productions):
+    for key, values in productions.items():
+        for value in values:
+            if len(value) < 2:
+                continue
+            else:
+                for letter in value:
+                    if letter.islower():
+                        moreThanTwo = {}
+                        moreThanTwo[find_unique_uppercase_key(productions)] = letter
+                        productions = renameTerminals(productions, moreThanTwo)
+    return productions
+
+def renameTerminals(productions, moreThanTwo):
+    new_productions = productions.copy()
+    for key, newTransition in moreThanTwo.items():
+        for values in new_productions.values():
+            for value in values:
+                if len(value) == 1:
+                    continue
+                for letter in value:
+                    if letter == newTransition:
+                        listValue = list(value)
+                        index = listValue.index(letter)
+                        listValue.pop(index)
+                        listValue.insert(index, key)
+                        values[values.index(value)] = "".join(listValue)
+
+    for key, value in moreThanTwo.items():
+        new_productions[key] = [value]
+    
+    return findNonTerminalWithTerminal(new_productions)
+
+
 if __name__ == '__main__':
 
     """PuttingNonTerminals = True
@@ -194,7 +227,7 @@ if __name__ == '__main__':
     "B": ["b", "ε"]
     }
 
-    productions = {
+    """productions = {
         "S": ["NP VP"],
         "VP": ["VP PP", "cooks", "drinks", "eats", "cuts"],
         "PP": ["P NP"],
@@ -203,7 +236,7 @@ if __name__ == '__main__':
         "P": ["in", "with"],
         "N": ["cat", "dog", "beer", "cake", "juice", "meat", "soup", "fork", "knife", "oven", "spoon"],
         "Det": ["a", "the"]
-    }
+    }"""
 
     
     productions = addNewInitialVariable(productions)
@@ -211,6 +244,7 @@ if __name__ == '__main__':
 
     resultado = findUnitTransitions(0, productions, [])
     productions = deleteUnitTransitions(resultado, productions)
+    productions = findMoreThanTwoVariables(productions)
     print(productions)
-    print(findMoreThanTwoVariables(productions))
+    print(findNonTerminalWithTerminal(productions))
     
