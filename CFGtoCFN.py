@@ -196,6 +196,7 @@ def renameTerminals(productions, moreThanTwo):
                         listValue.pop(index)
                         listValue.insert(index, key)
                         values[values.index(value)] = "".join(listValue)
+                        value = "".join(listValue)
 
     for key, value in moreThanTwo.items():
         new_productions[key] = [value]
@@ -221,13 +222,20 @@ if __name__ == '__main__':
         print("Ejemplo: aS|bS|c")
         productions[i] = input().split("|")"""
         
-    productions = {
+    """productions = {
     "S": ["ASA", "aB"],
     "A": ["B", "S"],
     "B": ["b", "ε"]
+    }"""
+
+    productions = {
+        "S": ["aS", "A", "C"],
+        "A": ["a"],
+        "B": ["aa"],
+        "C": ["aCb"],
     }
 
-    """productions = {
+    productions = {
         "S": ["NP VP"],
         "VP": ["VP PP", "cooks", "drinks", "eats", "cuts"],
         "PP": ["P NP"],
@@ -236,7 +244,7 @@ if __name__ == '__main__':
         "P": ["in", "with"],
         "N": ["cat", "dog", "beer", "cake", "juice", "meat", "soup", "fork", "knife", "oven", "spoon"],
         "Det": ["a", "the"]
-    }"""
+    }
 
     
     productions = addNewInitialVariable(productions)
@@ -246,5 +254,8 @@ if __name__ == '__main__':
     productions = deleteUnitTransitions(resultado, productions)
     productions = findMoreThanTwoVariables(productions)
     print(productions)
-    print(findNonTerminalWithTerminal(productions))
+    """productions = findNonTerminalWithTerminal(productions)
+    print(productions)
+    productions = findMoreThanTwoVariables(productions)
+    print(productions)"""
     
