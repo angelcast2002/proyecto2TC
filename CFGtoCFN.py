@@ -1,8 +1,4 @@
-import itertools as it
-
-
-def main():
-    print("Hello World!")
+import string
     
 def addNewInitialVariable(productions):
     addS = False
@@ -96,8 +92,83 @@ def removeNullProductions(productions):
     return productions                              
     
 
-         
+def findUnitTransitions(index, productions, result):
+    keyList = list(productions.keys())
+    key = keyList[index]
+    for value in productions[key]:
+        if len(value) == 1 and value.isupper():
+                result.append((key, value))  
 
+    index += 1
+    
+    if index < len(keyList):
+        findUnitTransitions(index, productions, result)
+
+    return result
+
+def deleteUnitTransitions(unitTransitions, productions):
+    for transition in unitTransitions:
+        key = transition[0]
+        value = transition[1]
+        for values in productions[key]:
+            if values == value:
+                productions[key].remove(values)
+                for val in productions[value]:
+                    if val not in productions[key]:
+                        if val.isupper():
+                            if len(val) != 1:
+                                productions[key].append(val)
+                        else:
+                            productions[key].append(val)
+    return productions
+
+def find_unique_uppercase_key(productions):
+    keys = set(productions.keys())
+    for letter in string.ascii_uppercase:
+        if letter not in keys:
+            return letter
+        
+
+def findMoreThanTwoVariables(productions):
+    new_productions = productions.copy()  # Copia del diccionario original para evitar modificarlo directamente
+    for key, values in new_productions.items():
+        for value in values:
+            numberOfVariables = 0
+            if len(value) <= 2:
+                continue
+            for i in range(len(value) - 1):
+                if value[i].isupper() and value[i + 1].isupper():
+                    numberOfVariables += 1
+                    break
+            if numberOfVariables != 0:
+                moreThanTwo = {}
+                moreThanTwo[find_unique_uppercase_key(productions)] = value[-2] + value[-1]
+                new_productions = renameMoreThaTwoVariables(new_productions, moreThanTwo)
+    
+    return new_productions  # Devuelve el diccionario modificado
+
+def renameMoreThaTwoVariables(productions, moreThanTwo):
+    new_productions = productions.copy()  # Copia del diccionario original para evitar modificarlo directamente
+    for key, newTransition in moreThanTwo.items():
+        for values in new_productions.values():
+            for value in values:
+                if len(value) <= 2:
+                    continue
+                match = 0
+                position = []
+                for i in range(len(value) - 1):
+                    if value[i] == newTransition[-2] and value[i + 1] == newTransition[-1]:
+                        match += 1
+                        position.extend([i, i + 1])
+                if match != 0:
+                    listValue = list(value)
+                    listValue.pop(position[1])
+                    listValue.pop(position[0])
+                    listValue.append(key)
+                    values[values.index(value)] = "".join(listValue)
+    for key, value in moreThanTwo.items():
+        new_productions[key] = [value]
+    return findMoreThanTwoVariables(new_productions)  # Devuelve el diccionario modificado
 
 if __name__ == '__main__':
 
@@ -123,10 +194,11 @@ if __name__ == '__main__':
     "B": ["b", "ε"]
     }
     
-    print(combinationsRemoveLetter("AAA", "A", 0, [], "AAA"))
-    #productions = addNewInitialVariable(productions)
-    #productions = removeNullProductions(productions)
+    productions = addNewInitialVariable(productions)
+    productions = removeNullProductions(productions)
+
+    resultado = findUnitTransitions(0, productions, [])
+    productions = deleteUnitTransitions(resultado, productions)
     print(productions)
-    
-    #main()
+    print(findMoreThanTwoVariables(productions))
     
