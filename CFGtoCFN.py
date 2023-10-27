@@ -254,6 +254,8 @@ if __name__ == '__main__':
     productions = deleteUnitTransitions(resultado, productions)
     productions = findMoreThanTwoVariables(productions)
     print(productions)
+
+    #el programa no debe tener palabras, solo letras para que lo siguiente funcione
     """productions = findNonTerminalWithTerminal(productions)
     print(productions)
     productions = findMoreThanTwoVariables(productions)
