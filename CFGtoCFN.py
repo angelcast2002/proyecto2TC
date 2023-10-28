@@ -222,20 +222,13 @@ if __name__ == '__main__':
         print("Ejemplo: aS|bS|c")
         productions[i] = input().split("|")"""
         
-    """productions = {
+    productions = {
     "S": ["ASA", "aB"],
     "A": ["B", "S"],
     "B": ["b", "ε"]
-    }"""
-
-    productions = {
-        "S": ["aS", "A", "C"],
-        "A": ["a"],
-        "B": ["aa"],
-        "C": ["aCb"],
     }
 
-    productions = {
+    """productions = {
         "S": ["NP VP"],
         "VP": ["VP PP", "cooks", "drinks", "eats", "cuts"],
         "PP": ["P NP"],
@@ -244,7 +237,7 @@ if __name__ == '__main__':
         "P": ["in", "with"],
         "N": ["cat", "dog", "beer", "cake", "juice", "meat", "soup", "fork", "knife", "oven", "spoon"],
         "Det": ["a", "the"]
-    }
+    }"""
 
     
     productions = addNewInitialVariable(productions)
