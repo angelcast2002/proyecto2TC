@@ -1,0 +1,8 @@
+Terminals:
+a b c e
+Variables:
+S X Y
+Producciones:
+S -> a X b;
+X -> a Y | b Y | e;
+Y -> X | c
