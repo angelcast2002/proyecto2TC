@@ -263,6 +263,8 @@ if __name__ == '__main__':
 
     while True:
         user_input = input("Ingrese una oracion o escriba 'salir' para terminar: ")
+        user_input = user_input.lower()
+
         if user_input.lower() == 'salir':
             break  
         
